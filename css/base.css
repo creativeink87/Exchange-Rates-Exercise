@@ -1,0 +1,267 @@
+@charset "utf-8";
+/* CSS Document */
+
+/********************
+		RESET
+********************/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+html, body { height: 100%; }
+
+body{
+	font-family:Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	line-height: 1;
+	}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+a { color: #000000; text-decoration: none; }
+a:hover { text-decoration: none; color: #ccc; }
+
+strong, b {
+    font-weight: bold;
+}
+
+/**************************
+		Customer SKin
+**************************/
+
+/*header*/
+#header { 
+    margin:0; 
+    padding:0; 
+    position:relative; 
+    width:100%; 
+    border-bottom:1px solid #ccc;
+    background:#000000;  
+}
+
+#headerInner { 
+    margin: 0; 
+    padding: 1em; position: relative; 
+    text-align: left; 
+}
+
+/*logo*/
+#logoContainer { 
+    padding-left:1em;
+    vertical-align: middle;
+    text-align: left;
+}
+
+h1#logo { 
+    font-family:Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif; 
+    font-size: 2em; 
+    color: #ffffff; 
+}
+
+/*nav*/
+#navContainer {
+    margin: 0; padding: 0;
+    vertical-align: middle;
+    text-align: right;
+}
+#nav { 
+    margin: 0;
+    padding: 1em;
+    position: relative; 
+    display: block;
+}
+
+#nav li { 
+    padding-left: 1em;
+    display: inline-block;
+    color: #ffffff;
+}
+
+/*footer*/
+#footer { 
+	margin:0;
+	padding:0;
+	width:100%; 
+	border-top:1px solid #ccc; 
+	background:#ffffff;
+    text-align: center;
+}
+
+#footerInner {
+    margin: 0; 
+    padding: 1em; position: relative; 
+    text-align: center; 
+}
+
+/*Sticky Footer*/
+#wrapper { 
+    margin: 0;
+    padding: 0;
+	background:#ffffff;
+    width: 100%;
+	min-height: 100%;
+	margin-bottom: -48px; /* equal to footer height */
+}	
+
+#wrapper:after {
+	content: "";
+  	display: block;
+	}
+	
+#footer, #wrapper:after {
+  height: 48px; 
+}
+
+/*content and layout*/
+#container {
+    margin:0 auto; 
+    padding:25px 15px;  
+    max-width: 1040px;
+}
+
+.col2 {
+    display: inline-block;
+    width: 49%;
+}
+
+h2 {
+    margin: 0.5em 0;
+    font-size: 1.8em;
+}
+
+.marginB {
+    margin-bottom: 1em;
+}
+
+/*standard buttons*/
+.button, .browse {
+    margin: 1em 0;
+    background: #000000;
+    border: 1px solid #ccc;
+    border-collapse: separate;
+    border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    color: #FFFFFF;
+    text-shadow: 0px 0px #F0F0F0;
+    padding: 2px 8px;
+    cursor: pointer;
+    *padding: 2px 8px;
+    font-family: Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    height: 40px;
+    width: 100%;
+    max-width: 210px;
+    font-size: 1.2em;
+    vertical-align: middle;
+}
+.button:hover, .browse:hover {
+    background: #333333;
+    border: 1px solid #FFFFFF;
+    color: #FFFFFF;
+    text-shadow: 0px 0px #606060;
+}
+
+/*cta button*/
+.cta.button, .cta.browse {
+    margin-top:1.5em; 
+    background:#1da556;
+}
+.cta.button:hover, .cta.browse:hover {
+    background: #24b762;
+}
+
+.hover { display: block; }
+.hover:hover { 
+    cursor: pointer;
+}
+
+/*text alignments*/
+.textRA {
+    text-align: right;
+}
+.textLA {
+    text-align: left;
+}
+.textCA {
+    text-align: center;
+}
+
+/*forms*/
+input#datePicker {
+    margin: 1em;
+    padding: 2px 8px;
+    border-collapse: separate;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 1.2em;
+    height: 40px;
+    vertical-align: middle;
+}
+
+select#currencysSelect {
+    font-size: 1.2em;
+    height: 40px;
+    vertical-align: middle;
+}
+
+/*Currency Table*/
+table#exchageRatesTable {
+    margin-top: 1em;
+    border-collapse: separate;
+    width: 100%;
+}
+
+table#exchageRatesTable td {
+    padding: 1em;
+    width: 50%;    
+}
+
+table#exchageRatesTable tr:nth-child(odd) {
+    background: #c0c0c0;
+    color: #ffffff;
+}
+
+table#exchageRatesTable tr:nth-child(even) {
+    background: #ffffff;
+    color: #000000;
+}
+
+#tableTitle td { 
+    background: #000000;
+    font-size:1.2em; 
+}
