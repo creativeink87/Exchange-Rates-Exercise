@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Exchange Rates Exercise</title>
+    <!--Main CSS-->  
+    <link rel="stylesheet" href="css/base.css" />
+    <!--Moment Additional Date Formating - Must load befor pickaday.js -->  
+    <script type="text/javascript" src="js/moment.min.js"></script>
+    <!--pickaday calender-->  
+    <link rel="stylesheet" href="css/pikaday.css" /> 
+    <script type="text/javascript" src="js/pikaday.js"></script>  
+  </head>
+  <body>
+    <header>
+        <div id="header">  
+            <div id="headerInner">
+                <div id="logoContainer" class="col2"><h1 id="logo" class="hover">Exchange Rates</h1></div>
+                <div id="navContainer" class="col2"><nav>
+                    <ul id="nav">
+                        <li id="about" class="hover">About</li> 
+                        <li id="getRates" class="hover">Get Rates</li>
+                    </ul>
+                </nav></div>
+            </div>
+        </div>    
+    </header>
+    <main>
+        <div id="wrapper">
+        <div id="container">
+            <p>Loading... if for any reason the app does not load, React may <strong>not</strong> be working right. Troubleshoot on: <a href="http://reactjs.cn/" target="_blank">reactjs.cn</a> or <a href="https://facebook.github.io/react" target="_blank">facebook.github.io/react</a></p>
+        </div>
+        </div>
+    </main>    
+    <footer>
+        <div id="footer">
+            <div id="footerInner">
+            &copy; Exchange Rates
+            </div>
+        </div>
+    </footer>  
+      
+<!-React Scripts-->  
+<script src="build/react.js"></script>
+<script src="build/react-dom.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
+
+<script type="text/babel">
+
+    //container to append content to page    
+    var container = document.getElementById('container');
+
+    //get request function to provide params too and trigger callback
+    var HttpClient = function() {
+        this.get = function(aUrl, aCallback) {
+        var anHttpRequest = new XMLHttpRequest();
+        anHttpRequest.onreadystatechange = function() { 
+        if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
+            aCallback(anHttpRequest.responseText);
+        }
+        anHttpRequest.open( "GET", aUrl, true );            
+        anHttpRequest.send( null );
+        }
+    }
+
+    //varialble to store fixer.io currency options
+    var currencysOptions;
+    //variable to store selected data response
+    var selectedData = [];
+
+    //create currency options - make a request to the get request function
+    var client = new HttpClient();
+    client.get('https://api.fixer.io/latest', function(response) {
+    //parse the json response from fixer.io
+    var parsed = JSON.parse(response);
+    //console.log(parsed);
+    //store the rates keys for currency selection    
+    var currencys = [];
+    for(var key in parsed.rates){
+    currencys.push(key);
+    }
+    currencys.push(parsed.base);
+    //console.log(currencys);
+    //store in the currency select field variable for later use    
+    currencysOptions = currencys;
+    //console.log(currencysOptions); 
+    loadApp();
+    }); 
+
+    //begin app
+    var beginApp = React.createClass({
+        render: function(){
+                var message = <p>{this.props.message}</p>;
+                var button = <button onClick={startConversion} className={'cta button'}>{this.props.button}</button>;
+                return <div id={'homePage'}><h2>Home</h2> {message} <div className={'textRA'}>{button}</div></div>;
+            }
+    });
+    function loadApp(){
+    var beginAppFactory = React.createFactory(beginApp);    
+    ReactDOM.render(
+        beginAppFactory({message:'Welcome to exchange rates a simple way to to find current and past currency exchange rates.', button: 'START NOW'}),
+        container
+    );
+    }
+
+    //Currency Coversion Form
+    var beginConversion = React.createClass({
+        render: function(){
+            var currencys = this.props.currencys;
+            var currencysList = currencys.map(function(currency, index){ return <option key={index} value={currency}>{currency}</option> })
+            var datePicker = <input id={'datePicker'} type={'text'}></input>;
+            var button = <button onClick={getConversions} className={'button'}>{this.props.button}</button>
+            return <div id={'conversionPage'}><h2>Currency Convertor</h2><p>Select a Currency and Date to begin.</p><form id={'exchangeForm'}><select id={'currencysSelect'}>{currencysList}</select>{datePicker}{button}</form><div id={'returnedData'}></div></div>;
+        }
+    });
+
+    function startConversion(){
+    var beginConversionFactory = React.createFactory(beginConversion);
+    ReactDOM.render(
+        beginConversionFactory({currencys: currencysOptions, button: 'Look Up' }), container
+    );
+    //date picker - initiate    
+    var picker = new Pikaday({ 
+        field: document.getElementById('datePicker'), 
+        format: 'YYYY-MM-DD',
+        defaultDate: moment().toDate(),
+        setDefaultDate: true
+    });     
+    }
+
+    //Currency Conversion form functionality
+    function getConversions(e){
+    e.preventDefault();
+    var requestURL = 'https://api.fixer.io/' + document.getElementById('datePicker').value +'?base='+ document.getElementById('currencysSelect').value;    
+    var client = new HttpClient();
+    client.get(requestURL, function(response) {
+    //parse the json response from fixer.io
+    var parsed = JSON.parse(response);
+    //console.log(parsed);
+    selectedData = [];
+    for(var key in parsed.rates){
+    selectedData.push({'currency': key, 'rate': parsed.rates[key]});
+    }
+    //console.log(selectedData);
+    loadExchangeRatesData();
+    });
+    }
+
+    //Build Crurency Table
+    var buildCurrencyTable = React.createClass({  
+        render: function(){
+            var currencyData = this.props.currencyData;
+            var currencyRows = Object.keys(currencyData).map(function(key, index) {
+            //console.log(currencyData[index].rate);
+             return <tr key={index}><td>{currencyData[index].currency}</td><td>{currencyData[index].rate}</td></tr>;
+            });
+            return <div id={'conversionDataContainer'}><table id={'exchageRatesTable'}><tbody><tr id={'tableTitle'}><td><strong>Currency</strong></td><td><strong>Exchange Rate</strong></td></tr>{currencyRows}</tbody></table></div>;
+        }
+    });
+    
+    function loadExchangeRatesData(){
+        var beginConversionTable = React.createFactory(buildCurrencyTable);
+        ReactDOM.render(
+        beginConversionTable({currencyData: selectedData}), document.getElementById('returnedData')
+    );  
+    }
+
+    //about page
+    var buildAbout = React.createClass({
+        render: function(){
+            var aboutH2 = this.props.aboutH2
+            var aboutP = this.props.aboutP;
+            var aboutI = this.props.aboutI;
+            var button = <button onClick={startConversion} className={'cta button'}>{this.props.button}</button>;
+            return <div id='aboutPage'><h2>About</h2><p className={'marginB'}><strong>{aboutP}</strong></p><p>{aboutI}</p><div className={'textRA'}>{button}</div></div>;
+        }
+    });
+    function loadAbout(){
+        var beginAbout = React.createFactory(buildAbout);
+        ReactDOM.render(
+        beginAbout({aboutH2: 'About',aboutP: 'How to use:',aboutI: 'Simply select a currency and date you wish to see the exchange rates for and click the look up button. You will then be presented with a table for all exchange rates in all currencys.', button: 'START NOW'}), container
+    );  
+    }
+
+    //nav functionality
+    var logo = document.getElementById('logo');
+    var about = document.getElementById('about');
+    var getRates = document.getElementById('getRates');
+    
+    logo.onclick = function(){
+        if(document.body.contains(document.getElementById('homePage'))){
+            //do nothing
+        }
+        else{
+            loadApp();
+        }
+    };
+    about.onclick = function(){
+        if(document.body.contains(document.getElementById('aboutPage'))){
+            //do nothing
+        }
+        else{
+            loadAbout();
+        }
+    };
+    getRates.onclick = function(){
+        if(document.body.contains(document.getElementById('conversionPage'))){
+            //do nothing
+        }
+        else{
+            startConversion();
+        }
+    };
+    
+
+    </script>
+     
+  </body>
+</html>
